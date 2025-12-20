@@ -3,8 +3,6 @@ import numpy as np
 import imageio
 import matplotlib.pyplot as plt
 
-from stable_baselines3.common.vec_env import DummyVecEnv
-
 from envs.make_env import make_env
 from utils_sb3 import load_agent
 

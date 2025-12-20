@@ -1,9 +1,8 @@
-"""Wrapper that stacks frames."""
-from collections import deque
+"""Wrapper that stacks frames, and additional helper wrappers."""
+from collections import deque, defaultdict
 import numpy as np
 import gymnasium as gym
-from gymnasium.spaces import Box, Discrete, MultiDiscrete, Dict
-from collections import defaultdict
+from gymnasium.spaces import Box, Discrete, MultiDiscrete, Dict 
 
 
 class FrameStack(gym.ObservationWrapper, gym.utils.RecordConstructorArgs):
