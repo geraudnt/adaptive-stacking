@@ -7,9 +7,6 @@
   <img src="https://img.shields.io/badge/Framework-Gymnasium%20%7C%20SB3-green.svg">
   <img src="https://img.shields.io/badge/License-MIT-lightgrey.svg">
 </p>
-<p align="center">
-  <img src="images/adaptive_stack_loop_expanded.jpg" alt="Framework illustration" width="80%">
-</p>
 
 ## ✨ Overview
 
@@ -229,10 +226,9 @@ python train.py --arch mlp --with_cnn --algo PPO --stack_type adaptive --num_sta
     <td> <div style="position: absolute; top: 50%; right: 50%;">MiniGrid-MemoryS17Random-v0: Adaptive Stack (k=2)</div> <img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_adaptive-seed_0_render.gif" alt="" width = 400px height = auto></td>
     <td> <div style="position: absolute; top: 50%; right: 50%;">MiniGrid-MemoryS17Random-v0: Frame Stack (k=2)</div> <img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_framestack-seed_0_render.gif" alt="" width = 400px height = auto></td>
   </tr>   
-Agent observations
   <tr>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">MiniGrid-MemoryS17Random-v0: Adaptive Stack (k=2)</div> <img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_adaptive-seed_0_agent_view.gif" alt="" width = 400px height = auto></td>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">MiniGrid-MemoryS17Random-v0: Frame Stack (k=2)</div> <img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_framestack-seed_0_agent_view.gif" alt="" width = 400px height = auto></td>
+    <td><img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_adaptive-seed_0_agent_view.gif" alt="" width = 400px height = auto></td>
+    <td><img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_framestack-seed_0_agent_view.gif" alt="" width = 400px height = auto></td>
   </tr>   
 </table>
 
