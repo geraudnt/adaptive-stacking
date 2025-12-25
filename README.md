@@ -10,9 +10,9 @@
 
 
 <table align="center" width = 100% height = auto >
-  <tr>
-    <td> <div align="center" style="position: absolute; top: 50%; right: 0%;">Adaptive Stack</div> <img src="images/PPO-arch_lstm-env_FetchReachDense-v4-num_stack_4-stack_type_adaptive-seed_0_deterministic.gif" alt="" width = 100% height = auto></td>
-    <td> <div align="center" style="position: absolute; top: 50%; right: 0%;">Sliding window</div> <img src="images/PPO-arch_lstm-env_FetchReachDense-v4-num_stack_4-stack_type_framestack-seed_0_deterministic.gif" alt="" width = 100% height = auto></td>
+  <tr><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Adaptive Stack</b> (memory/sequence length k=4)</div> <img src="images/PPO-arch_lstm-env_FetchReachDense-v4-num_stack_4-stack_type_adaptive-seed_0_deterministic.gif" alt="" width = 100% height = auto>
+  </tr>
+  <tr> <div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Sliding window</b> (memory/sequence length k=4)</div> <img src="images/PPO-arch_lstm-env_FetchReachDense-v4-num_stack_4-stack_type_framestack-seed_0_deterministic.gif" alt="" width = 100% height = auto>
   </tr>   
 </table>
 
