@@ -19,7 +19,7 @@ This repository contains the **official codebase** for the paper
 We introduce **Adaptive Stacking**, a general, algorithm-agnostic alternative to fixed frame stacking (sliding windows) that allows agents to **actively control what information is remembered and forgotten**. Adaptive Stacking transforms memory from a passive architectural choice into a **learned decision-making problem** in partially observable and non-Markovian environments, enabling learning in continual environments and stronger generalization in big worlds.
 
 **Key features:**
-- 🔁 Drop-in replacement for frame stacking
+- 🔁 Drop-in replacement for frame stacking (sliding windows)
 - 🧩 Compatible with *any* RL algorithm and gymnasium environment
 - ⚙️ Works with tabular, MLP, CNN, LSTM, and Transformer agents
 - 📦 Seamless integration with Stable-Baselines3 and sb3-contrib
