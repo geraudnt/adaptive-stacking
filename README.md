@@ -98,16 +98,16 @@ python manual_control.py --env tmaze-v0 --maze_length 3 --stack_type adaptive --
 <img src="images/tmaze-v0_adaptive.png" alt="Manual control" width = auto height = auto>
 
 ```bash
-python manual_control.py --env MiniGrid-MemoryS17Random-v0 --stack_type framestack --num_stack 4 --seed 7
+python manual_control.py --env MiniGrid-MemoryS7-v0 --stack_type framestack --num_stack 4 --seed 0
 ```
 
-<img src="images/MiniGrid-MemoryS17Random-v0_framestack.png" alt="Manual control" width = auto height = auto>
+<img src="images/MiniGrid-MemoryS7-v0_render.png" alt="Manual control" width = auto height = auto>
 
 ```bash
-python manual_control.py --env MiniGrid-MemoryS17Random-v0 --stack_type framestack --num_stack 4 --seed 7 --agent_view
+python manual_control.py --env MiniGrid-MemoryS7-v0 --stack_type framestack --num_stack 4 --seed 0 --agent_view
 ```
 
-<img src="images/MiniGrid-MemoryS17Random-v0_framestack_agent_view.png" alt="Manual control" width = auto height = auto>
+<img src="images/MiniGrid-MemoryS7-v0_agent_view.png" alt="Manual control" width = auto height = auto>
 
 ```bash
 python manual_control.py --env cube-v0 --scramble_steps 0 --stack_type framestack --num_stack 10 --cube_cam orthographic
