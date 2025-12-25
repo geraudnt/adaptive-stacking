@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/badge/License-MIT-lightgrey.svg">
 </p>
 <p align="center">
-  <img src="images/framework.gif" alt="Framework illustration" width="85%">
+  <img src="images/adaptive_stack_loop_expanded.jpg" alt="Framework illustration" width="80%">
 </p>
 
 ## ✨ Overview
