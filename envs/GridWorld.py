@@ -31,7 +31,7 @@ class GridWorldEnv(gym.Env):
             "# # 3 #\n" \
             "# # # #"
 
-    def __init__(self, MAP=MAP, length=2, random_length=False, active=False, fix_start=True, seed=None, max_episode_step=1000000, fully_obs=False, goal_obs=False, continual=False, render_mode = 'human'):   
+    def __init__(self, MAP=MAP, length=5, random_length=False, active=False, fix_start=True, seed=None, max_episode_step=1000000, fully_obs=False, goal_obs=False, continual=False, render_mode = 'human'):   
         self.MAP, self.length, self.active, self.fix_start, self.goal_obs, self.max_episode_step, self.render_mode = MAP, length, active, fix_start, goal_obs, max_episode_step, render_mode
         self.np_random, self.seed = seeding.np_random(seed)
         self.render_params = dict(agent=True, env_map=True, skill=None, policy=False, title=None, cmap="RdYlBu_r")
