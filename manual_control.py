@@ -92,6 +92,7 @@ def key_handler(key):
 
 if __name__ == "__main__": 
     env, _ = make_env(args)
+    env.action_space.seed(args.seed)
     print("Observation space: ", env.observation_space)
     print("action_space: ", env.action_space)
     # assert ((len(env.observation_space.shape) == 3) and args.agent_view) or (not args.agent_view), "agent_view is only for RGB image observations"  
