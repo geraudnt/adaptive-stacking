@@ -13,48 +13,60 @@ class FrameStack(gym.ObservationWrapper, gym.utils.RecordConstructorArgs):
     :type env: gym.Env
     :param num_stack: Memory stack length
     :type num_stack: int
+    :param observe_stack: If False, only modify the action space and let the RL algorithm 
+        implementation handle the stack management based on these actions. 
+        Usefull for memory efficient implementations (to avoid duplicate rollout buffers).
     """
     def __init__(
         self,
         env: gym.Env,
-        num_stack: int,
+        num_stack: int=1,
+        observe_stack: bool = True,
     ):
         gym.utils.RecordConstructorArgs.__init__(
-            self, num_stack=num_stack,
+            self, num_stack=num_stack, observe_stack=observe_stack,
         )
         gym.ObservationWrapper.__init__(self, env)
 
         self.num_stack = num_stack
+        self.observe_stack = observe_stack
         self.frames = deque(maxlen=num_stack)
         self.frames_render = deque(maxlen=num_stack)
 
-        low = np.repeat(self.observation_space.low[np.newaxis, ...], num_stack, axis=0)
-        high = np.repeat(
-            self.observation_space.high[np.newaxis, ...], num_stack, axis=0
-        )
-        self.observation_space = Box(
-            low=low, high=high, dtype=self.observation_space.dtype
-        )
+        if self.observe_stack:
+            low = np.repeat(self.observation_space.low[np.newaxis, ...], num_stack, axis=0)
+            high = np.repeat(
+                self.observation_space.high[np.newaxis, ...], num_stack, axis=0
+            )
+            self.observation_space = Box(
+                low=low, high=high, dtype=self.observation_space.dtype
+            )
 
     def observation(self, observation):
         assert len(self.frames) == self.num_stack, (len(self.frames), self.num_stack)
         return np.array(self.frames)
 
     def step(self, action):
-        observation, reward, terminated, truncated, info = self.env.step(action)
-        self.frames.append(observation)
-        if len(self.frames_render)==len(self.frames):
+        if len(self.frames_render)==self.num_stack:
             del self.frames_render[0]
-        return self.observation(None), reward, terminated, truncated, info
+
+        observation, reward, terminated, truncated, info = self.env.step(action)
+        if self.observe_stack:
+            self.frames.append(observation)
+            observation = self.observation(None)
+
+        return observation, reward, terminated, truncated, info
 
     def reset(self, **kwargs):
         obs, info = self.env.reset(**kwargs)
 
-        [self.frames.append(obs*0) for _ in range(self.num_stack)]
-        self.frames.append(obs)
         self.frames_render = deque(maxlen=self.num_stack)
+        if self.observe_stack:
+            [self.frames.append(obs*0) for _ in range(self.num_stack)]
+            self.frames.append(obs)
+            obs = self.observation(None)
 
-        return self.observation(None), info
+        return obs, info
 
     def render(self, *args, **kwargs):
         if self.env.render_mode=="rgb_array":
@@ -62,7 +74,7 @@ class FrameStack(gym.ObservationWrapper, gym.utils.RecordConstructorArgs):
                 image = self.env.render(*args, **kwargs)
                 self.frames_render = [image * 0 for _ in range(self.num_stack - 1)] 
                 self.frames_render.append(image)
-            if len(self.frames_render)==len(self.frames)-1:
+            if len(self.frames_render)==self.num_stack-1:
                 image = self.env.render(*args, **kwargs)
                 self.frames_render.append(image)
             return np.concatenate(self.frames_render, axis=1)
@@ -87,7 +99,7 @@ class AdaptiveStack(gym.ObservationWrapper, gym.utils.RecordConstructorArgs):
     def __init__(
         self,
         env: gym.Env,
-        num_stack: int,
+        num_stack: int=1,
         multi_head: bool = True,
         observe_stack: bool = True,
     ):
@@ -438,8 +450,8 @@ class PartialObsGoal(gym.ObservationWrapper):
         observation["observation"][5:] *= 0
         if self.steps % self.reset_goal >= self.visible_goal_steps:
             observation["desired_goal"] *= 0
-            if self.steps >= self.visible_goal_steps*2:
-                observation["observation"][3:6] *= 0
+            # if self.steps >= self.visible_goal_steps*2:
+            #     observation["observation"][3:6] *= 0
         return observation, reward, terminated, truncated, info
 
     def reset(self, *args, **kwargs):
@@ -447,10 +459,7 @@ class PartialObsGoal(gym.ObservationWrapper):
         observation, info = self.env.reset(*args, **kwargs)
         observation["observation"][5:] *= 0
         if self.steps >= self.visible_goal_steps:
-            if "desired_goal" in observation:
-                observation["desired_goal"] *= 0
-            else:
-                observation[-self.goal_dims:] = 0
+            observation["desired_goal"] *= 0
         return observation, info
 
 class MiniGridMod(gym.ObservationWrapper):

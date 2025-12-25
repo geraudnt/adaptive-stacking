@@ -30,7 +30,7 @@ if __name__ == "__main__":
                     env = LoggerWrapper(make_env(args)[0], args.stack_type)
                     env_ = env
                 else:       env_ = make_env(args)[0]
-                if args.run: env_.reset(seed=args.run + rank)
+                if args.seed: env_.reset(seed=args.seed + rank)
                 else:        env_.reset()
                 return env_
             set_random_seed(seed)
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     policy_type, policy_kwargs = get_policy_type(args)
     if args.algo == "PPO":
         model = PPO(policy_type, vec_env, policy_kwargs=policy_kwargs, device=args.device,
-                    n_steps=args.n_steps, batch_size=args.batch_size, seed=args.run, # n_epochs=20,
+                    n_steps=args.n_steps, batch_size=args.batch_size, seed=args.seed, # n_epochs=20,
                     verbose=1, tensorboard_log=log_dir)
         model.learn(int(args.maxiter), callback=SaveLogCallback(log_dir=log_dir))
     
@@ -50,13 +50,13 @@ if __name__ == "__main__":
                              n_stack = args.num_stack, # Recurrence/Sequence/Context length for the RNN (i.e. sliding window if using Frame Stacking)
                              adaptive_stack=args.stack_type=="adaptive", # Whether to use Adaptive Stacking or the default Frame Stacking (sliding window)
                              policy_kwargs=policy_kwargs, device=args.device,
-                             n_steps=args.n_steps, batch_size=args.batch_size, seed=args.run,
+                             n_steps=args.n_steps, batch_size=args.batch_size, seed=args.seed,
                              verbose=1, tensorboard_log=log_dir)
         model.learn(int(args.maxiter), callback=SaveLogCallback(log_dir=log_dir))
     
     elif args.algo == "GRPO":
         model = GRPO(policy_type, vec_env, policy_kwargs=policy_kwargs, device=args.device,
-                    n_steps=args.n_steps, batch_size=args.batch_size, seed=args.run,
+                    n_steps=args.n_steps, batch_size=args.batch_size, seed=args.seed,
                     verbose=1, tensorboard_log=log_dir)
         model.learn(int(args.maxiter), callback=SaveLogCallback(log_dir=log_dir))
     

@@ -41,13 +41,13 @@ class GridWorldEnvXOR(gym.Env):
             "# # 3 # #\n" \
             "# # # # #"
     
-    MAP =   "# # # # #\n" \
+    MAP5 =   "# # # # #\n" \
             "# # 2 # #\n" \
             "# S 1 E #\n" \
             "# # 3 # #\n" \
             "# # # # #"
     
-    MAP2 =  "# # # # # # #\n" \
+    MAP10 =  "# # # # # # #\n" \
             "# # # 2 # # #\n" \
             "# # # 0 # # #\n" \
             "# S 0 1 0 E #\n" \
@@ -55,13 +55,13 @@ class GridWorldEnvXOR(gym.Env):
             "# # # 3 # # #\n" \
             "# # # # # # #"
 
-    def __init__(self, MAP=MAP, length=5, random_length=False, active=False, fix_start=False, seed=None, max_episode_step=100, fully_obs=False, goal_obs=False, continual=False, render_mode = 'human'):   
+    def __init__(self, MAP=BASEMAP, length=5, random_length=False, active=False, fix_start=False, seed=None, max_episode_step=100, fully_obs=False, goal_obs=False, continual=False, render_mode = 'human'):   
         self.MAP, self.length, self.active, self.fix_start, self.goal_obs, self.max_episode_step, self.render_mode = MAP, length, active, fix_start, goal_obs, max_episode_step, render_mode
         self.np_random, self.seed = seeding.np_random(seed)
         self.render_params = dict(agent=True, env_map=True, skill=None, policy=False, title=None, cmap="RdYlBu_r")
         
         if length == None: length = 0
-        assert length in [1,2], "Length should be 1 (no corridor) or 2 (corridor)"
+        assert length in [5,10], "Length should be 5 (no corridor) or 10 (corridor)"
 
         self.active = True
         self.length = length
@@ -81,12 +81,14 @@ class GridWorldEnvXOR(gym.Env):
         # row3 = row3[:3]+" #"*length+row3[3:]
         # row4 = row4[:3]+" #"*length+row4[3:]
         # self.MAP = "\n".join([row0,row1,row2,row3,row4])
-        if length==2: self.MAP = self.MAP2
+
+        if length==5: self.MAP = self.MAP5
+        elif length==10: self.MAP = self.MAP10
         self._map_init()
         self.map_img = self._gridmap_to_img() 
 
-        if self.fix_start: 
-            self.start_position = (2+self.length-1, 2)
+        self.start_position = (self.n//2, 2)
+        # if self.fix_start: self.start_position = None
         self.goals = [self.goal1,self.goal2]
         self.start_goal = None
         if self.goal_obs: self.start_states = [((-1,-1),*self.start_position)]
@@ -186,8 +188,8 @@ class GridWorldEnvXOR(gym.Env):
             self.goal = (idx1,idx2)
             self.COLOURS["S"] = self.COLOURS[str(idx1+2)]
             self.COLOURS["S"] = self.COLOURS[str(idx2+2)]
-            self.grid[1+self.length][1] = self.grid[self.goals[self.goal[0]][0]][self.goals[self.goal[0]][1]]
-            self.grid[1+self.length][-2] = self.grid[self.goals[self.goal[1]][0]][self.goals[self.goal[1]][1]]
+            self.grid[self.n//2][1] = self.grid[self.goals[self.goal[0]][0]][self.goals[self.goal[0]][1]]
+            self.grid[self.n//2][-2] = self.grid[self.goals[self.goal[1]][0]][self.goals[self.goal[1]][1]]
 
             
             self.position = self.start_position
@@ -220,8 +222,8 @@ class GridWorldEnvXOR(gym.Env):
         self.goal = (idx1,idx2)
         self.COLOURS["S"] = self.COLOURS[str(idx1+2)]
         self.COLOURS["S"] = self.COLOURS[str(idx2+2)]
-        self.grid[1+self.length][1] = self.grid[self.goals[self.goal[0]][0]][self.goals[self.goal[0]][1]]
-        self.grid[1+self.length][-2] = self.grid[self.goals[self.goal[1]][0]][self.goals[self.goal[1]][1]]
+        self.grid[self.n//2][1] = self.grid[self.goals[self.goal[0]][0]][self.goals[self.goal[0]][1]]
+        self.grid[self.n//2][-2] = self.grid[self.goals[self.goal[1]][0]][self.goals[self.goal[1]][1]]
 
         self.position = self.start_position
         if not self.start_position:

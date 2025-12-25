@@ -4,7 +4,7 @@ from envs.wrappers import *
 
 # Environment setup (unchanged)
 def make_env(args):
-    name = f"{args.algo}-arch_{args.arch}-env_{args.env}-num_stack_{args.num_stack}-stack_type_{args.stack_type}-run_{args.run}"
+    name = f"{args.algo}-arch_{args.arch}-env_{args.env}-num_stack_{args.num_stack}-stack_type_{args.stack_type}-seed_{args.seed}"
 
     if "tmaze" in args.env: # tmaze-v0
         import envs.GridWorld
@@ -13,9 +13,9 @@ def make_env(args):
                     continual=args.no_reset, fix_start=True, goal_obs=False,
                     fully_obs=args.fully_obs, render_mode=args.render_mode)
         maze_type = "active" if args.active else "passive"
-        name = f"{args.algo}-arch_{args.arch}-env_{maze_type}_tmaze-v0_maze_length_{args.maze_length+2}-random_length_{args.random_length}-num_stack_{args.num_stack}-stack_type_{args.stack_type}-run_{args.run}"
+        name = f"{args.algo}-arch_{args.arch}-env_{maze_type}_tmaze-v0_maze_length_{args.maze_length}-random_length_{args.random_length}-num_stack_{args.num_stack}-stack_type_{args.stack_type}-seed_{args.seed}"
         if args.no_reset:
-            name = f"{args.algo}-arch_{args.arch}-env_{maze_type}_tmaze-continual-v0_maze_length_{args.maze_length+2}-random_length_{args.random_length}-num_stack_{args.num_stack}-stack_type_{args.stack_type}-run_{args.run}"
+            name = f"{args.algo}-arch_{args.arch}-env_{maze_type}_tmaze-continual-v0_maze_length_{args.maze_length}-random_length_{args.random_length}-num_stack_{args.num_stack}-stack_type_{args.stack_type}-seed_{args.seed}"
     
     elif "xormaze" in args.env: # xormaze-v0
         import envs.GridWorldXOR
@@ -24,9 +24,9 @@ def make_env(args):
                     continual=args.no_reset, fix_start=True, goal_obs=False,
                     fully_obs=args.fully_obs, render_mode=args.render_mode)
         maze_type = "active" if args.active else "passive"
-        name = f"{args.algo}-arch_{args.arch}-env_{maze_type}_xormaze-v0_maze_length_{args.maze_length}-random_length_{args.random_length}-num_stack_{args.num_stack}-stack_type_{args.stack_type}-run_{args.run}"
+        name = f"{args.algo}-arch_{args.arch}-env_{maze_type}_xormaze-v0_maze_length_{args.maze_length}-random_length_{args.random_length}-num_stack_{args.num_stack}-stack_type_{args.stack_type}-seed_{args.seed}"
         if args.no_reset:
-            name = f"{args.algo}-arch_{args.arch}-env_{maze_type}_xormaze-continual-v0_maze_length_{args.maze_length}-random_length_{args.random_length}-num_stack_{args.num_stack}-stack_type_{args.stack_type}-run_{args.run}"
+            name = f"{args.algo}-arch_{args.arch}-env_{maze_type}_xormaze-continual-v0_maze_length_{args.maze_length}-random_length_{args.random_length}-num_stack_{args.num_stack}-stack_type_{args.stack_type}-seed_{args.seed}"
     
     elif "cube" in args.env: # cube-v0
         import envs.cube2x2
@@ -37,7 +37,7 @@ def make_env(args):
             cube_cam = args.cube_cam
         env = gym.make(args.env, episode_steps=100, scramble_steps=args.scramble_steps, random_length=args.random_length,
                     cube_cam=cube_cam, render_mode=args.render_mode, render_2d=args.render_2d)
-        name = f"{args.algo}-arch_{args.arch}-env_cube-v0_scramble_steps_{args.scramble_steps}-random_length_{args.random_length}-cube_cam_{cube_cam}-num_stack_{args.num_stack}-stack_type_{args.stack_type}-run_{args.run}"
+        name = f"{args.algo}-arch_{args.arch}-env_cube-v0_scramble_steps_{args.scramble_steps}-random_length_{args.random_length}-cube_cam_{cube_cam}-num_stack_{args.num_stack}-stack_type_{args.stack_type}-seed_{args.seed}"
     
     elif "popgym" in args.env: # E.g. popgym-PositionOnlyCartPoleHard-v0
         import popgym
@@ -105,7 +105,8 @@ def make_env(args):
         import minigrid
         from minigrid.wrappers import FullyObsWrapper, ImgObsWrapper, RGBImgObsWrapper, RGBImgPartialObsWrapper
 
-        if args.maze_length>3:
+        if args.maze_length>=7:
+            assert args.maze_length%2==1, f"maze_length {args.maze_length} should be odd"
             env = gym.make(args.env, size=args.maze_length, render_mode=args.render_mode)#, agent_view_size=3)
         else:
             env = gym.make(args.env, render_mode=args.render_mode)#, agent_view_size=3)
@@ -142,7 +143,7 @@ def make_env(args):
             env = AdaptiveStack(env, args.num_stack, multi_head=not args.single_head)
     else:
         if args.stack_type=="framestack":
-            env = FrameStack(env, 1)
+            env = FrameStack(env, args.num_stack, observe_stack=False)
         elif "adaptive" in args.stack_type:
             env = AdaptiveStack(env, args.num_stack, multi_head=not args.single_head, observe_stack=False)
     

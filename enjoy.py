@@ -38,11 +38,11 @@ if __name__ == "__main__":
     lstm_states = None
     lstm_episode_starts = np.ones((1,), dtype=bool)
 
-    obs, _ = env.reset(seed=args.run)
+    obs, _ = env.reset(seed=args.seed)
     while True:
         # plt.pause(0.5)
         key = cv2.waitKey(int(not args.enjoy_step_by_step))
-        if key == 27 or (args.save_video and episode>=2): 
+        if key == 27 or (args.save_video and episode>=5): 
             cv2.destroyAllWindows()
             break
         
@@ -84,8 +84,8 @@ if __name__ == "__main__":
             
             lstm_states = None
             lstm_episode_starts = np.ones((1,), dtype=bool)
-            obs, _ = env.reset(seed=args.run)
+            obs, _ = env.reset(seed=None if args.seed==None else args.seed+episode)
     if args.save_video:
         print(f"images/{name}.gif")
-        imageio.mimsave(f"images/{name}.mp4", images, fps=100)
-        # imageio.mimsave(f"images/{name}.gif", images, loop=0, fps=100)
+        imageio.mimsave(f"images/{name}.mp4", images, fps=60)
+        # imageio.mimsave(f"images/{name}.gif", images, loop=0, fps=10)

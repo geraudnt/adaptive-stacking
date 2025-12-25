@@ -31,16 +31,16 @@ class GridWorldEnv(gym.Env):
             "# # 3 #\n" \
             "# # # #"
 
-    def __init__(self, MAP=MAP, length=2, random_length=False, active=False, fix_start=False, seed=None, max_episode_step=1000000, fully_obs=False, goal_obs=False, continual=False, render_mode = 'human'):   
+    def __init__(self, MAP=MAP, length=2, random_length=False, active=False, fix_start=True, seed=None, max_episode_step=1000000, fully_obs=False, goal_obs=False, continual=False, render_mode = 'human'):   
         self.MAP, self.length, self.active, self.fix_start, self.goal_obs, self.max_episode_step, self.render_mode = MAP, length, active, fix_start, goal_obs, max_episode_step, render_mode
         self.np_random, self.seed = seeding.np_random(seed)
         self.render_params = dict(agent=True, env_map=True, skill=None, policy=False, title=None, cmap="RdYlBu_r")
         
-        if length == None: length = 0
-        assert length>=0, "maze_length should be >= 0"
+        if length == None: length = 2
+        assert length>=2, "Maze length should be >= 2"
 
         self.length = length
-        self.min_length = 0
+        self.min_length = 2
         self.random_length = random_length
         self.continual = continual
         self.fully_obs = fully_obs
@@ -50,18 +50,18 @@ class GridWorldEnv(gym.Env):
         self.n, self.m, self.grid = None, None, None
 
         row0,row1,row2,row3,row4 = self.BASEMAP.split("\n")
-        row0 = row0[:3]+" #"*self.length+row0[3:]
-        row1 = row1[:3]+" #"*self.length+row1[3:]
-        row2 = row2[:3]+" 0"*self.length+row2[3:]
-        row3 = row3[:3]+" #"*self.length+row3[3:]
-        row4 = row4[:3]+" #"*self.length+row4[3:]
+        row0 = row0[:3]+" #"*(self.length-2)+row0[3:]
+        row1 = row1[:3]+" #"*(self.length-2)+row1[3:]
+        row2 = row2[:3]+" 0"*(self.length-2)+row2[3:]
+        row3 = row3[:3]+" #"*(self.length-2)+row3[3:]
+        row4 = row4[:3]+" #"*(self.length-2)+row4[3:]
         self.MAP = "\n".join([row0,row1,row2,row3,row4])
         self._map_init()
         self.map_img = self._gridmap_to_img() 
 
-        if self.fix_start: 
-            if active: self.start_position = (2, 2)
-            else:      self.start_position = (2, 1)
+        if active: self.start_position = (2, 2)
+        else:      self.start_position = (2, 1)
+        # if not self.fix_start: self.start_position = None
         self.goals = [self.goal1,self.goal2]
         self.start_goal = None
         if self.goal_obs: self.start_states = [((0,0),*self.start_position)]
@@ -124,7 +124,7 @@ class GridWorldEnv(gym.Env):
             elif position in [self.goal1, self.goal2]: reward, done = -1, True
             # else:
             #     # a penalty (when t > o) if x < t - o (desired: x = t - o)
-            #     reward = float(y - 1 < self.steps - self.active) * (-1/(self.length+2))
+            #     reward = float(y - 1 < self.steps - self.active) * (-1/(self.length))
             
             if self.continual and (position in [self.goal1, self.goal2]): 
                 done, goal_observed = False, self.goal_obs
@@ -162,7 +162,7 @@ class GridWorldEnv(gym.Env):
         elif self.position in [self.goal1, self.goal2]: reward, self.done = -1, True
         elif False:
             # a penalty (when t > o) if x < t - o (desired: x = t - o)
-            reward = float(y - 1 < self.steps - self.active) * (-1/(self.length+2))
+            reward = float(y - 1 < self.steps - self.active) * (-1/(self.length))
 
         if self.continual and (self.position in [self.goal1, self.goal2]): 
             self.done, self.goal_observed = False, self.goal_obs
@@ -185,7 +185,7 @@ class GridWorldEnv(gym.Env):
         self.steps += 1
         truncated = False
         # if (not self.continual) and self.max_episode_step and self.steps>=self.max_episode_step: truncated = True  
-        if (not self.continual) and self.steps > self.length + 2 + self.active: truncated = True  
+        if (not self.continual) and self.steps > self.length + self.active: truncated = True  
         
         if self.render_mode=="human":
             self.render()  
@@ -205,7 +205,7 @@ class GridWorldEnv(gym.Env):
             self.grid[self.goal2[0]][self.goal2[1]] = "#"
             self.possiblePositions.remove(self.goal1)
             self.possiblePositions.remove(self.goal2)
-            self.junction, self.goal1, self.goal2 = (2,length+2), (1,length+2), (3,length+2)
+            self.junction, self.goal1, self.goal2 = (2,length), (1,length), (3,length)
             self.grid[self.junction[0]][self.junction[1]] = junction
             self.grid[self.goal1[0]][self.goal1[1]] = goal1
             self.grid[self.goal2[0]][self.goal2[1]] = goal2

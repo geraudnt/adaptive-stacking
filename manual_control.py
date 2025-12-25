@@ -15,8 +15,9 @@ args = parser.parse_args()
 # export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6
 
 KEYS = {27:'escape', 8:'backspace', 9:'tab', 13:'enter', 32:' ', 81:'left', 82:'up', 83:'right', 84:'down'}
-controls = {"Quit":'escape', 'reset':'backspace', 'random action':'tab', 'minigrid_pickup':'enter', 'minigrid_open':' ', 'left':'left', 'up':'up', 'right':'right', 'down':'down'}
-print(f"\n Controls: {controls} \n")
+controls = {"Quit":'escape', 'reset':'backspace', 'random action':'tab', 'minigrid_pickup':'enter', 'minigrid_open':' ', 'left':'left', 'up':'up', 'right':'right', 'down':'down',}
+print(f"\n Environment controls: {controls} \n")
+print(f"\n Memory controls: Press keys 0-{min(9,args.num_stack-1)} to pop the ith observation from the stack (and take a random environment action) \n")
 
 def transform_rgb_bgr(image):
     return image[:, :, [2, 1, 0]]
@@ -41,7 +42,7 @@ def start():
             break
 
 def reset():      
-    obs, _ = env.reset(seed=args.run)
+    obs, _ = env.reset(seed=args.seed)
     print("Reset")
     return obs
     
@@ -51,9 +52,9 @@ def step(action):
     return obs
 
 def key_handler(key):
-    if key not in KEYS: print('Unknown pressed', key); return
-    key = KEYS[key]
-    print('pressed', key)
+    if key in KEYS:
+        key = KEYS[key]
+        print('pressed', key)
     
     # minigrid_actions = {"left":"left", "right": "right", "up":"forward", "enter":"pickup", "down":"drop", " ":"toggle"}
     minigrid_actions = {"left":0, "right":1, "up":2, "enter":3, "down":4, " ":5}
@@ -63,11 +64,25 @@ def key_handler(key):
             return reset()
         elif hasattr(env.unwrapped,"actions") and type(env.unwrapped.actions)==dict and key in env.unwrapped.actions: 
             action = env.unwrapped.actions[key]
+            if args.stack_type=="adaptive" and not args.single_head:
+                action = [action, args.num_stack-1]
+                print(f"Memory action i={args.num_stack-1}. Environment action: {action}")
         elif "MiniGrid" in args.env and key in minigrid_actions: 
             action = minigrid_actions[key]
+            if args.stack_type=="adaptive" and not args.single_head:
+                action = [action, args.num_stack-1]
+                print(f"Memory action i={args.num_stack-1}. Environment action: {action}")
         else: 
             action = env.action_space.sample()
-            print("Unknown action. Random action taken:", action)
+            if args.stack_type=="adaptive" and key in range(48,58):
+                if key-48 < args.num_stack:
+                    action[-1] = key-48
+                    print(f"Memory action i={key-48}. Random environment action: {action}")
+                else:
+                    print("Unknown environment action. Random action taken:", action)
+            else:
+                print("Unknown environment action. Random action taken:", action)
+
         return step(action)
     except:
         action = env.action_space.sample()
@@ -75,8 +90,7 @@ def key_handler(key):
         return step(action)
 
 
-if __name__ == "__main__":    
-    args.single_head = True
+if __name__ == "__main__": 
     env, _ = make_env(args)
     print("Observation space: ", env.observation_space)
     print("action_space: ", env.action_space)
