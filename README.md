@@ -10,13 +10,14 @@
 
 ## ✨ Overview
 
-This repository contains the **official codebase** for the paper  
-**[Beyond Sliding Windows: Learning to Manage Memory in Non-Markovian Environments](http://arxiv.org/abs/2512.19154)**.
+This repository contains the **official codebase** for the preprint and workshop papers:  
+**[Beyond Sliding Windows: Learning to Manage Memory in Non-Markovian Environments](http://arxiv.org/abs/2512.19154)**.  
+**[Finding the FrameStack: Learning What to Remember for Non-Markovian Reinforcement Learning](https://openreview.net/pdf?id=W7O95Q1qzT)**.
 
-We introduce **Adaptive Stacking**, a general, algorithm-agnostic alternative to fixed frame stacking (sliding windows) that allows agents to **actively control what information is remembered and forgotten**. Adaptive Stacking transforms memory from a passive architectural choice into a **learned decision-making problem** in partially observable and non-Markovian environments, enabling learning in continual environments and stronger generalization in big worlds.
+We introduce **Adaptive Stacking**, a general, algorithm-agnostic alternative to fixed sliding windows (frame stacking) that allows agents to **actively control what information is remembered and forgotten**. Adaptive Stacking transforms memory from a passive architectural choice into a **learned decision-making problem** in partially observable and non-Markovian environments, enabling learning in continual environments and stronger generalization in big worlds.
 
 **Key features:**
-- 🔁 Drop-in replacement for frame stacking (sliding windows)
+- 🔁 Drop-in replacement for sliding windows (frame stacking)
 - 🧩 Compatible with *any* RL algorithm and gymnasium environment
 - ⚙️ Works with tabular, MLP, CNN, LSTM, and Transformer agents
 - 📦 Seamless integration with Stable-Baselines3 and sb3-contrib
@@ -76,7 +77,7 @@ Adaptive Stacking is **fully algorithm-agnostic** and has been tested with:
 Two integration patterns are demonstrated:
 
 1. **Wrapper-only**: AdaptiveStack augments the action space (wih memory actions) and observation space (with the memory stack).
-2. **Wrapper + Buffer Modification**: Replaces sliding windows inside rollout buffers (e.g., RecurrentPPO).
+2. **Wrapper + Buffer Modification**: Replaces sliding windows inside rollout buffers (when sampling trajectories for gradient descent). E.g. RecurrentPPO.
 
 Both mirror how frame stacking is typically used in modern RL pipelines.
 
@@ -95,25 +96,29 @@ Interactively step through environments and **visualize the memory stack**.
 python manual_control.py --env tmaze-v0 --maze_length 3 --stack_type adaptive --num_stack 4
 ```
 
-<img src="images/tmaze-v0_adaptive.png" alt="Manual control" width = auto height = auto>
+<img src="images/tmaze-v0_adaptive.png" alt="Manual control" width = 100% height = auto>
 
 ```bash
 python manual_control.py --env MiniGrid-MemoryS7-v0 --stack_type framestack --num_stack 4 --seed 0
 ```
 
-<img src="images/MiniGrid-MemoryS7-v0_render.png" alt="Manual control" width = auto height = auto>
+<img src="images/MiniGrid-MemoryS7-v0_render.png" alt="Manual control" width = 100% height = auto>
 
 ```bash
 python manual_control.py --env MiniGrid-MemoryS7-v0 --stack_type framestack --num_stack 4 --seed 0 --agent_view
 ```
 
-<img src="images/MiniGrid-MemoryS7-v0_agent_view.png" alt="Manual control" width = auto height = auto>
+<img src="images/MiniGrid-MemoryS7-v0_agent_view.png" alt="Manual control" width = 100% height = auto>
 
 ```bash
+python manual_control.py --env cube-v0 --scramble_steps 0 --stack_type framestack --num_stack 10 --cube_cam face
+python manual_control.py --env cube-v0 --scramble_steps 0 --stack_type framestack --num_stack 10 --cube_cam face --render_2d
 python manual_control.py --env cube-v0 --scramble_steps 0 --stack_type framestack --num_stack 10 --cube_cam orthographic
 ```
 
-<img src="images/cube-v0_framestack.png" alt="Manual control" width = auto height = auto>
+<img src="images/cube-v0_framestack_face.png" alt="Manual control" width = 100% height = auto>
+<img src="images/cube-v0_framestack_face_2d.png" alt="Manual control" width = 100% height = auto>
+<img src="images/cube-v0_framestack_orthographic.png" alt="Manual control" width = 100% height = auto>
 
 ---
 
