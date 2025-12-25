@@ -428,6 +428,7 @@ class PartialObsGoal(gym.ObservationWrapper):
         fetchhideblock = True,
         reset_goal = float("inf"),
         noise = 0,
+        new_alpha = 0.2
     ):
         gym.ObservationWrapper.__init__(self, env)
         self.steps = 0
@@ -435,6 +436,11 @@ class PartialObsGoal(gym.ObservationWrapper):
         self.fetchhideblock = fetchhideblock
         self.reset_goal = reset_goal
         self.noise = noise
+        self.new_alpha = new_alpha
+
+        # Access MuJoCo internals
+        self.model = env.unwrapped.model
+        self.goal_site_id = 0
 
     def step(self, action):
         self.steps += 1
@@ -452,14 +458,17 @@ class PartialObsGoal(gym.ObservationWrapper):
             observation["desired_goal"] *= 0
             # if self.steps >= self.visible_goal_steps*2:
             #     observation["observation"][3:6] *= 0
+            self.model.site_rgba[self.goal_site_id][3] = self.new_alpha
+
         return observation, reward, terminated, truncated, info
 
     def reset(self, *args, **kwargs):
         self.steps = 0
         observation, info = self.env.reset(*args, **kwargs)
         observation["observation"][5:] *= 0
-        if self.steps >= self.visible_goal_steps:
-            observation["desired_goal"] *= 0
+
+        self.model.site_rgba[self.goal_site_id][3] = 1.0
+
         return observation, info
 
 class MiniGridMod(gym.ObservationWrapper):
