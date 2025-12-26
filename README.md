@@ -10,12 +10,27 @@
 
 
 <table align="center" width = 100% height = auto >
-  <tr><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Adaptive Stack</b> (memory/sequence length k=4)</div> <img src="images/PPO-arch_lstm-env_FetchReachDense-v4-num_stack_4-stack_type_adaptive-seed_0_deterministic.gif" alt="" width = 100% height = auto>
+  <tr>
+    <div align="center" style="position: absolute; top: 50%; right: 0%;"><b>TRAIN (Episode length = 50)</b></div>
+    <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Adaptive Stack:</b><br/> stack/context length k=4</div> <img src="images/PPO-arch_mlp-env_FetchReachDense-v4-num_stack_4-stack_type_adaptive-seed_0_deterministic.gif" alt="" width = 100% height = auto></td>
+    <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Sliding Window (Frame Stack):</b><br/> stack/context length k=4</div> <img src="PPO-arch_mlp-env_FetchReachDense-v4-num_stack_4-stack_type_framestack-seed_0_deterministic.gif" alt="" width = 100% height = auto></td>
+    <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Sliding Window (Frame Stack):</b><br/> stack/context length k=50 (full episode history) </div><img src="images/PPO-arch_mlp-env_FetchReachDense-v4-num_stack_50-stack_type_framestack-seed_0_deterministic.gif" alt="" width = 100% height = auto></td>
   </tr>
-  <tr> <div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Sliding window</b> (memory/sequence length k=4)</div> <img src="images/PPO-arch_lstm-env_FetchReachDense-v4-num_stack_4-stack_type_framestack-seed_0_deterministic.gif" alt="" width = 100% height = auto>
-  </tr>   
+</table>
+<table align="center" width = 100% height = auto >
+  <tr>
+    <div align="center" style="position: absolute; top: 50%; right: 0%;"><b>TEST (Episode length = 100)</b></div>
+    <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Adaptive Stack:</b><br/> stack/context length k=4</div> <img src="images/PPO-arch_mlp-env_FetchReachDense-v4-num_stack_4-stack_type_adaptive-seed_0_deterministic_test.gif" alt="" width = 100% height = auto></td>
+    <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Sliding Window (Frame Stack):</b><br/> stack/context length k=4</div> <img src="PPO-arch_mlp-env_FetchReachDense-v4-num_stack_4-stack_type_framestack-seed_0_deterministic_test.gif" alt="" width = 100% height = auto></td>
+    <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Sliding Window (Frame Stack):</b><br/> stack/context length k=50 (full episode history) </div><img src="images/PPO-arch_mlp-env_FetchReachDense-v4-num_stack_50-stack_type_framestack-seed_0_deterministic_test.gif" alt="" width = 100% height = auto></td>
+  </tr>
 </table>
 
+<video width="320" height="240" autoplay loop muted>
+  <source src="images/PPO-arch_mlp-env_FetchReachDense-v4-num_stack_4-stack_type_adaptive-seed_0.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+  
 ## ✨ Overview
 
 This repository contains the **official codebase** for the preprint and workshop papers:  
@@ -146,8 +161,8 @@ python enjoy.py --algo QL --env tmaze-v0 --maze_length 5 --stack_type framestack
 
 <table>
   <tr>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">Train Passive-TMaze (L=3): Adaptive Stack (k=2)</div> <img src="images/QL-arch_mlp-env_passive_tmaze-v0_maze_length_5-random_length_False-num_stack_2-stack_type_adaptive-seed_2.gif" alt="" width = 400px height = auto></td>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">Train Passive-TMaze (L=3): Frame Stack (k=2)</div> <img src="images/QL-arch_mlp-env_passive_tmaze-v0_maze_length_5-random_length_False-num_stack_2-stack_type_framestack-seed_0.gif" alt="" width = 400px height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">Train Passive-TMaze (L=3): Adaptive Stack (k=2)</div> <img src="images/QL-arch_mlp-env_passive_tmaze-v0_maze_length_5-random_length_False-num_stack_2-stack_type_adaptive-seed_2.gif" alt="" width = 100% height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">Train Passive-TMaze (L=3): Frame Stack (k=2)</div> <img src="images/QL-arch_mlp-env_passive_tmaze-v0_maze_length_5-random_length_False-num_stack_2-stack_type_framestack-seed_0.gif" alt="" width = 100% height = auto></td>
   </tr>   
 </table>
 
@@ -157,8 +172,8 @@ python enjoy.py --algo QL --env tmaze-v0 --maze_length 10 --stack_type framestac
 ```
 <table>
   <tr>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">Test Passive-TMaze (L=8): Adaptive Stack (k=2)</div> <img src="images/QL-arch_mlp-env_passive_tmaze-v0_maze_length_10-random_length_False-num_stack_2-stack_type_adaptive-seed_0.gif" alt="" width = 400px height = auto></td>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">Test Passive-TMaze (L=8): Frame Stack (k=2)</div> <img src="images/QL-arch_mlp-env_passive_tmaze-v0_maze_length_10-random_length_False-num_stack_2-stack_type_framestack-seed_2.gif" alt="" width = 400px height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">Test Passive-TMaze (L=8): Adaptive Stack (k=2)</div> <img src="images/QL-arch_mlp-env_passive_tmaze-v0_maze_length_10-random_length_False-num_stack_2-stack_type_adaptive-seed_0.gif" alt="" width = 100% height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">Test Passive-TMaze (L=8): Frame Stack (k=2)</div> <img src="images/QL-arch_mlp-env_passive_tmaze-v0_maze_length_10-random_length_False-num_stack_2-stack_type_framestack-seed_2.gif" alt="" width = 100% height = auto></td>
   </tr>   
 </table>
 
@@ -177,15 +192,15 @@ python train.py --algo RecurrentPPO --env tmaze-v0 --maze_length 5 --stack_type 
 ```
 <table>
   <tr>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">Train Passive-TMaze (L=3): Adaptive Stack (k=2)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_5-random_length_False-num_stack_2-stack_type_adaptive-seed_0.gif" alt="" width = 400px height = auto></td>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">Train Passive-TMaze (L=3): Frame Stack (k=2)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_5-random_length_False-num_stack_2-stack_type_framestack-seed_0.gif" alt="" width = 400px height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">Train Passive-TMaze (L=3): Adaptive Stack (k=2)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_5-random_length_False-num_stack_2-stack_type_adaptive-seed_0.gif" alt="" width = 100% height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">Train Passive-TMaze (L=3): Frame Stack (k=2)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_5-random_length_False-num_stack_2-stack_type_framestack-seed_0.gif" alt="" width = 100% height = auto></td>
   </tr>   
 </table>
 
 <table>
   <tr>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">Test Passive-TMaze (L=8): Adaptive Stack (k=2)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_10-random_length_False-num_stack_2-stack_type_adaptive-seed_0.gif" alt="" width = 400px height = auto></td>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">Test Passive-TMaze (L=8): Frame Stack (k=2)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_10-random_length_False-num_stack_2-stack_type_framestack-seed_0.gif" alt="" width = 400px height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">Test Passive-TMaze (L=8): Adaptive Stack (k=2)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_10-random_length_False-num_stack_2-stack_type_adaptive-seed_0.gif" alt="" width = 100% height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">Test Passive-TMaze (L=8): Frame Stack (k=2)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_10-random_length_False-num_stack_2-stack_type_framestack-seed_0.gif" alt="" width = 100% height = auto></td>
   </tr>   
 </table>
 
@@ -196,24 +211,35 @@ python train.py --algo RecurrentPPO --env tmaze-v0 --maze_length 5 --stack_type 
 ```
 <table>
   <tr>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">Train Passive-TMaze (L=3): Adaptive Stack (k=5)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_5-random_length_False-num_stack_5-stack_type_adaptive-seed_0.gif" alt="" width = 400px height = auto></td>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">Train Passive-TMaze (L=3): Frame Stack (k=5)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_5-random_length_False-num_stack_5-stack_type_framestack-seed_0.gif" alt="" width = 400px height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">Train Passive-TMaze (L=3): Adaptive Stack (k=5)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_5-random_length_False-num_stack_5-stack_type_adaptive-seed_0.gif" alt="" width = 100% height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">Train Passive-TMaze (L=3): Frame Stack (k=5)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_5-random_length_False-num_stack_5-stack_type_framestack-seed_0.gif" alt="" width = 100% height = auto></td>
   </tr>   
 </table>
 
 <table>
   <tr>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">Test Passive-TMaze (L=8): Adaptive Stack (k=5)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_10-random_length_False-num_stack_5-stack_type_adaptive-seed_2.gif" alt="" width = 400px height = auto></td>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">Test Passive-TMaze (L=8): Frame Stack (k=5)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_10-random_length_False-num_stack_5-stack_type_framestack-seed_3.gif" alt="" width = 400px height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">Test Passive-TMaze (L=8): Adaptive Stack (k=5)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_10-random_length_False-num_stack_5-stack_type_adaptive-seed_2.gif" alt="" width = 100% height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">Test Passive-TMaze (L=8): Frame Stack (k=5)</div> <img src="images/RecurrentPPO-arch_mlp-env_passive_tmaze-v0_maze_length_10-random_length_False-num_stack_5-stack_type_framestack-seed_3.gif" alt="" width = 100% height = auto></td>
   </tr>   
 </table>
 
 ---
 
-#### (2) PPO with LSTM Feature Extractor
+#### (2) PPO with MLP/LSTM/Transformer Feature Extractor
 
 Here, AdaptiveStack augments **both the action and observation spaces**.
 
+
+```bash
+python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch mlp --stack_type framestack --num_stack 4
+python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch mlp --stack_type adaptive --num_stack 4
+```
+<table>
+  <tr>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">FetchReachDense-v4: Adaptive Stack (k=4)</div> <img src="images/PPO-arch_mlp-env_FetchReachDense-v4-num_stack_4-stack_type_adaptive-seed_0.gif" alt="" width = 100% height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">FetchReachDense-v4: Frame Stack (k=4)</div> <img src="images/PPO-arch_mlp-env_FetchReachDense-v4-num_stack_4-stack_type_framestack-seed_0.gif" alt="" width = 100% height = auto></td>
+  </tr>   
+</table>
 
 ```bash
 python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch lstm --stack_type framestack --num_stack 4
@@ -221,8 +247,19 @@ python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 
 ```
 <table>
   <tr>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">FetchReachDense-v4: Adaptive Stack (k=4)</div> <img src="images/PPO-arch_lstm-env_FetchReachDense-v4-num_stack_4-stack_type_adaptive-seed_0.gif" alt="" width = 400px height = auto></td>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">FetchReachDense-v4: Frame Stack (k=4)</div> <img src="images/PPO-arch_lstm-env_FetchReachDense-v4-num_stack_4-stack_type_framestack-seed_0.gif" alt="" width = 400px height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">FetchReachDense-v4: Adaptive Stack (k=4)</div> <img src="images/PPO-arch_lstm-env_FetchReachDense-v4-num_stack_4-stack_type_adaptive-seed_0.gif" alt="" width = 100% height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">FetchReachDense-v4: Frame Stack (k=4)</div> <img src="images/PPO-arch_lstm-env_FetchReachDense-v4-num_stack_4-stack_type_framestack-seed_0.gif" alt="" width = 100% height = auto></td>
+  </tr>   
+</table>
+
+```bash
+python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch Transformer --stack_type framestack --num_stack 4
+python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch Transformer --stack_type adaptive --num_stack 4
+```
+<table>
+  <tr>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">FetchReachDense-v4: Adaptive Stack (k=4)</div> <img src="images/PPO-arch_transformer-env_FetchReachDense-v4-num_stack_4-stack_type_adaptive-seed_0.gif" alt="" width = 100% height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">FetchReachDense-v4: Frame Stack (k=4)</div> <img src="images/PPO-arch_transformer-env_FetchReachDense-v4-num_stack_4-stack_type_framestack-seed_0.gif" alt="" width = 100% height = auto></td>
   </tr>   
 </table>
 
@@ -236,12 +273,12 @@ python train.py --arch mlp --with_cnn --algo PPO --stack_type adaptive --num_sta
 ```
 <table>
   <tr>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">MiniGrid-MemoryS17Random-v0: Adaptive Stack (k=2)</div> <img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_adaptive-seed_0_render.gif" alt="" width = 400px height = auto></td>
-    <td> <div style="position: absolute; top: 50%; right: 50%;">MiniGrid-MemoryS17Random-v0: Frame Stack (k=2)</div> <img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_framestack-seed_0_render.gif" alt="" width = 400px height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">MiniGrid-MemoryS17Random-v0: Adaptive Stack (k=2)</div> <img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_adaptive-seed_0_render.gif" alt="" width = 100% height = auto></td>
+    <td> <div style="position: absolute; top: 50%; right: 50%;">MiniGrid-MemoryS17Random-v0: Frame Stack (k=2)</div> <img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_framestack-seed_0_render.gif" alt="" width = 100% height = auto></td>
   </tr>   
   <tr>
-    <td><img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_adaptive-seed_0_agent_view.gif" alt="" width = 400px height = auto></td>
-    <td><img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_framestack-seed_0_agent_view.gif" alt="" width = 400px height = auto></td>
+    <td><img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_adaptive-seed_0_agent_view.gif" alt="" width = 100% height = auto></td>
+    <td><img src="images/PPO-arch_mlp-env_MiniGrid-MemoryS17Random-v0-num_stack_2-stack_type_framestack-seed_0_agent_view.gif" alt="" width = 100% height = auto></td>
   </tr>   
 </table>
 
