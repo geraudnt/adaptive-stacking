@@ -51,7 +51,7 @@ if __name__ == "__main__":
             img = env.render()
         if args.agent_view or  args.render_mode == "rgb_array":
             # img = cv2.resize(img, dsize=(512,int(512*(img.shape[0]/img.shape[1]))), interpolation=cv2.INTER_AREA)
-            if args.save_video:
+            if args.save_video: # and t%5==0: # Uncomment to reduce number of frames and hence gif size
                 images.append(img)
             img = transform_rgb_bgr(img)
             cv2.imshow(args.env, img) 
@@ -86,6 +86,6 @@ if __name__ == "__main__":
             lstm_episode_starts = np.ones((1,), dtype=bool)
             obs, _ = env.reset(seed=None if args.seed==None else args.seed+episode)
     if args.save_video:
-        print(f"images/{name}.gif")
+        print(name)
         imageio.mimsave(f"images/{name}.mp4", images, fps=60)
-        # imageio.mimsave(f"images/{name}.gif", images, loop=0, fps=10)
+        # imageio.mimsave(f"images/{name}.gif", images, loop=0, fps=60)
