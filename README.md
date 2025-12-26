@@ -14,7 +14,7 @@
     <div align="center" style="position: absolute; top: 50%; right: 0%;"><b>TRAIN (Episode length = 50)</b></div>
     <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Adaptive Stack:</b><br/> stack/context length k=4</div> <img src="images/PPO-arch_mlp-env_FetchReachDense-v4-num_stack_4-stack_type_adaptive-seed_0_deterministic.gif" alt="" width = 100% height = auto></td>
     <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Sliding Window (Frame Stack):</b><br/> stack/context length k=4</div> <img src="PPO-arch_mlp-env_FetchReachDense-v4-num_stack_4-stack_type_framestack-seed_0_deterministic.gif" alt="" width = 100% height = auto></td>
-    <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Sliding Window (Frame Stack):</b><br/> stack/context length k=50 (full episode history) </div><img src="images/PPO-arch_mlp-env_FetchReachDense-v4-num_stack_50-stack_type_framestack-seed_0_deterministic.gif" alt="" width = 100% height = auto></td>
+    <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Sliding Window (Frame Stack):</b><br/> stack/context length k=50</div><img src="images/PPO-arch_mlp-env_FetchReachDense-v4-num_stack_50-stack_type_framestack-seed_0_deterministic.gif" alt="" width = 100% height = auto></td>
   </tr>
 </table>
 <table align="center" width = 100% height = auto >
@@ -22,7 +22,7 @@
     <div align="center" style="position: absolute; top: 50%; right: 0%;"><b>TEST (Episode length = 100)</b></div>
     <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Adaptive Stack:</b><br/> stack/context length k=4</div> <img src="images/PPO-arch_mlp-env_FetchReachDense-v4-num_stack_4-stack_type_adaptive-seed_0_deterministic_test.gif" alt="" width = 100% height = auto></td>
     <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Sliding Window (Frame Stack):</b><br/> stack/context length k=4</div> <img src="PPO-arch_mlp-env_FetchReachDense-v4-num_stack_4-stack_type_framestack-seed_0_deterministic_test.gif" alt="" width = 100% height = auto></td>
-    <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Sliding Window (Frame Stack):</b><br/> stack/context length k=50 (full episode history) </div><img src="images/PPO-arch_mlp-env_FetchReachDense-v4-num_stack_50-stack_type_framestack-seed_0_deterministic_test.gif" alt="" width = 100% height = auto></td>
+    <td><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Sliding Window (Frame Stack):</b><br/> stack/context length k=50</div><img src="images/PPO-arch_mlp-env_FetchReachDense-v4-num_stack_50-stack_type_framestack-seed_0_deterministic_test.gif" alt="" width = 100% height = auto></td>
   </tr>
 </table>
 
