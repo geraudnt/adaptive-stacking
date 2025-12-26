@@ -8,6 +8,14 @@
   <img src="https://img.shields.io/badge/License-MIT-lightgrey.svg">
 </p>
 
+
+<table align="center" width = 100% height = auto >
+  <tr><div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Adaptive Stack</b> (memory/sequence length k=4)</div> <img src="images/PPO-arch_lstm-env_FetchReachDense-v4-num_stack_4-stack_type_adaptive-seed_0_deterministic.gif" alt="" width = 100% height = auto>
+  </tr>
+  <tr> <div align="center" style="position: absolute; top: 50%; right: 0%;"><b>Sliding window</b> (memory/sequence length k=4)</div> <img src="images/PPO-arch_lstm-env_FetchReachDense-v4-num_stack_4-stack_type_framestack-seed_0_deterministic.gif" alt="" width = 100% height = auto>
+  </tr>   
+</table>
+
 ## ✨ Overview
 
 This repository contains the **official codebase** for the preprint and workshop papers:  
@@ -208,8 +216,8 @@ Here, AdaptiveStack augments **both the action and observation spaces**.
 
 
 ```bash
-python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch mlp --stack_type framestack --num_stack 4
-python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch mlp --stack_type adaptive --num_stack 4
+python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch lstm --stack_type framestack --num_stack 4
+python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch lstm --stack_type adaptive --num_stack 4
 ```
 <table>
   <tr>
