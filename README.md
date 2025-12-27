@@ -155,6 +155,8 @@ python train.py --algo QL --env tmaze-v0 --maze_length 5 --stack_type adaptive -
 python train.py --algo QL --env tmaze-v0 --maze_length 5 --stack_type framestack --num_stack 2
 ```
 
+`--single_head` is for Discrete actions instead of MultiDiscrete
+
 ```bash
 python enjoy.py --algo QL --env tmaze-v0 --maze_length 5 --stack_type adaptive --num_stack 2 --single_head
 python enjoy.py --algo QL --env tmaze-v0 --maze_length 5 --stack_type framestack --num_stack 2
@@ -232,8 +234,8 @@ Here, AdaptiveStack augments **both the action and observation spaces**.
 
 
 ```bash
-python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch mlp --stack_type framestack --num_stack 4
-python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch mlp --stack_type adaptive --num_stack 4
+python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch mlp --stack_type adaptive --num_stack 4 --seed 0
+python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch mlp --stack_type framestack --num_stack 4 --seed 0
 ```
 <table>
   <tr>
@@ -243,8 +245,8 @@ python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch mlp --stac
 </table>
 
 ```bash
-python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch lstm --stack_type framestack --num_stack 4
-python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch lstm --stack_type adaptive --num_stack 4
+python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch lstm --stack_type adaptive --num_stack 4 --seed 0
+python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch lstm --stack_type framestack --num_stack 4 --seed 0
 ```
 <table>
   <tr>
@@ -254,8 +256,8 @@ python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch lstm --sta
 </table>
 
 ```bash
-python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch transformer --stack_type framestack --num_stack 4
-python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch transformer --stack_type adaptive --num_stack 4
+python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch transformer --stack_type adaptive --num_stack 4 --seed 0
+python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch transformer --stack_type framestack --num_stack 4 --seed 0
 ```
 <table>
   <tr>
@@ -269,8 +271,8 @@ python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch transforme
 #### (3) PPO with CNN (MiniGrid)
 
 ```bash
-python train.py --arch mlp --with_cnn --algo PPO --stack_type framestack --num_stack 2 --env MiniGrid-MemoryS17Random-v0 --n_envs 8 --features_dim 1024 --hidden_size 1024 --seed 0
 python train.py --arch mlp --with_cnn --algo PPO --stack_type adaptive --num_stack 2 --env MiniGrid-MemoryS17Random-v0 --n_envs 8 --features_dim 1024 --hidden_size 1024 --seed 0
+python train.py --arch mlp --with_cnn --algo PPO --stack_type framestack --num_stack 2 --env MiniGrid-MemoryS17Random-v0 --n_envs 8 --features_dim 1024 --hidden_size 1024 --seed 0
 ```
 <table>
   <tr>
