@@ -54,7 +54,7 @@ The code has been tested on **Ubuntu ≥ 20.04 LTS** with **Python 3.10**.
 
 ### Main Dependencies
 - `gymnasium==1.0.0`
-- `stable_baselines3==2.4.1`
+- `stable_baselines3==2.7.1`
 
 To exactly reproduce our environment, use the provided Conda setup:
 
