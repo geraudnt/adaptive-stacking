@@ -1,4 +1,4 @@
-gymnasium==1.0.0
+gymnasium==1.2.3
 gymnasium-robotics==1.4.1
 minigrid==3.0.0
 stable_baselines3==2.7.1
