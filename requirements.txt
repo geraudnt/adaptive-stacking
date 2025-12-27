@@ -1,4 +1,6 @@
 gymnasium==1.0.0
+gymnasium-robotics==1.4.1
+minigrid==3.0.0
 stable_baselines3==2.7.1
 sb3_contrib==2.7.1
 numpy==1.24.3
