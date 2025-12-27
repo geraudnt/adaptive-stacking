@@ -80,16 +80,16 @@ class cube(gym.Env):
         self.observation_space = spaces.Box(low=0, high=5, shape=(len(self.goal_state),), dtype=np.uint8)
         self.camera_action_views = lambda action,camera_view: camera_view
         if cube_cam == "face":
-            self.actions = ["U","U'","R","R'","F","F'","D","D'","L","L'","B","B'","CU","CR","CD","CL"]
-            self.camera_action_views = lambda action,camera_view:  {12: [5,0,0,2,0,0], # CU
-                                                                    13: [1,2,1,1,2,4], # CR
-                                                                    14: [2,3,3,0,3,3], # CD
-                                                                    15: [4,5,4,4,5,1], # CL
+            self.actions = ["U","U'","R","R'","F","F'","D","D'","L","L'","B","B'","XU","XR","XD","XL"]
+            self.camera_action_views = lambda action,camera_view:  {12: [5,0,0,2,0,3], # XU Rotate up
+                                                                    13: [1,5,1,1,2,4], # XR Rotate right
+                                                                    14: [2,3,3,5,3,0], # XD Rotate down
+                                                                    15: [4,2,4,4,5,1], # XL Rotate left
                                                                     }[action][camera_view]
             self.camera_views = [[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15],[16,17,18,19],[20,21,22,23]]
             self.observation_space = spaces.Box(low=0, high=5, shape=(4,), dtype=np.uint8)
         elif cube_cam == "orthographic":
-            self.actions = ["U","U'","R","R'","F","F'","D","D'","L","L'","B","B'","C"]
+            self.actions = ["U","U'","R","R'","F","F'","D","D'","L","L'","B","B'","X"] # X Rotate
             self.camera_action_views = lambda action,camera_view: (camera_view+1)%2
             self.camera_views = [[0,1,2,3,4,5,6,7,8,9,10,11],[12,13,14,15,16,17,18,19,20,21,22,23]]
             self.observation_space = spaces.Box(low=0, high=5, shape=(4*3,), dtype=np.uint8)
@@ -99,7 +99,9 @@ class cube(gym.Env):
         self.steps += 1
         if action_ind>=12:
             if type(action_ind) != int: action_ind = int(action_ind)
+            print(action_ind,self.camera_view)
             self.camera_view = self.camera_action_views(action_ind,self.camera_view)
+            print(self.camera_view)
         else:
             action_str = self.actions[action_ind]
             self.state = py222.doAlgStr(self.state, action_str)

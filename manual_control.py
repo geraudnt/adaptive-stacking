@@ -14,7 +14,7 @@ args = parser.parse_args()
 # export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so
 # export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6
 
-KEYS = {27:'escape', 8:'backspace', 9:'tab', 13:'enter', 32:' ', 81:'left', 82:'up', 83:'right', 84:'down', 117:"U", 100:"D", 108:"L", 114:"R", 102:"F", 98:"B"}
+KEYS = {27:'escape', 8:'backspace', 9:'tab', 13:'enter', 32:' ', 81:'left', 82:'up', 83:'right', 84:'down', 117:"U", 100:"D", 108:"L", 114:"R", 102:"F", 98:"B", 120:"X"}
 controls = {"Quit":'escape', 'reset':'backspace', 'random action':'tab'}
 print(f"\n General controls: {controls} \n")
 print(f"\n Memory controls: Press keys 0-{min(9,args.num_stack-1)} to pop the ith observation from the stack (and take a random environment action) \n")
@@ -56,8 +56,10 @@ def key_handler(key):
         key = KEYS[key]
         print('pressed', key)
     
-    # minigrid_actions = {"left":"left", "right": "right", "up":"forward", "enter":"pickup", "down":"drop", " ":"toggle"}
     minigrid_actions = {"left":0, "right":1, "up":2, "enter":3, "down":4, " ":5}
+    cube_camera_actions = {"left":"XL", "right":"XR", "up":"XU", "down":"XD"}
+    if "cube-v0" == args.env and key in cube_camera_actions:
+        key = cube_camera_actions[key]
 
     try:
         if key == 'backspace': 
@@ -67,15 +69,18 @@ def key_handler(key):
                 action = env.unwrapped.actions[key]
             else: # list
                 action = env.unwrapped.actions.index(key)
-                print(action, key)
             if args.stack_type=="adaptive" and not args.single_head:
                 action = [action, args.num_stack-1]
                 print(f"Memory action i={args.num_stack-1}. Environment action: {action}")
+            else:
+                print(f"Environment action: {action}")
         elif "MiniGrid" in args.env and key in minigrid_actions: 
             action = minigrid_actions[key]
             if args.stack_type=="adaptive" and not args.single_head:
                 action = [action, args.num_stack-1]
                 print(f"Memory action i={args.num_stack-1}. Environment action: {action}")
+            else:
+                print(f"Environment action: {action}")
         else: 
             action = env.action_space.sample()
             if args.stack_type=="adaptive" and key in range(48,58):
