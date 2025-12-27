@@ -91,7 +91,7 @@ class SaveLogCallback(BaseCallback):
             self.logger.record("total rewards (1000 steps)", total_rewards)
         if len(stats["success"]) > 0:
             total_rewards = np.mean(stats["success"][-100:])
-            self.logger.record("success rate", total_rewards)
+            self.logger.record("successes", total_rewards)
         if len(stats["memory_regret"]) > 0:
             mean_passive_count = np.mean(stats["passive_count"][-100:])
             mean_active_count = np.mean(stats["active_count"][-100:])
