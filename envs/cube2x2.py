@@ -100,12 +100,11 @@ class cube(gym.Env):
         self.steps += 1
         if action_ind>=12:
             if type(action_ind) != int: action_ind = int(action_ind)
-            print(action_ind,self.camera_view)
             self.camera_view = self.camera_action_views(action_ind,self.camera_view)
-            print(self.camera_view)
         else:
             action_str = self.actions[action_ind]
             self.state = py222.doAlgStr(self.state, action_str)
+        obs = self.state[self.camera_views[self.camera_view]]
         
         # diff = abs(self.goal_state-self.state).sum()
         # success = diff == 0
@@ -118,13 +117,9 @@ class cube(gym.Env):
         else:
             reward = 0.0
             done = False
-
         truncate = False
         if self.steps >= self.episode_steps:
             truncate = True
-            
-        obs = self.state[self.camera_views[self.camera_view]]
-        print(obs, self.state)
         
         if self.render_mode=="human":
             self.render() 
