@@ -1,9 +1,11 @@
+import os
+from collections import defaultdict
+
 from stable_baselines3.common.vec_env import SubprocVecEnv
 from stable_baselines3.common.utils import set_random_seed
-
-from collections import defaultdict
-from envs.make_env import *
 from utils_sb3 import *
+
+from envs.make_env import *
 
 from get_args import parser
 args = parser.parse_args()

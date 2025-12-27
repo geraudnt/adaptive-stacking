@@ -1,8 +1,9 @@
 from collections import defaultdict
-import gymnasium as gym
-from gymnasium.wrappers import FlattenObservation
 import numpy as np
 import torch, torch.nn as nn
+
+import gymnasium as gym
+from gymnasium.wrappers import FlattenObservation
 
 from stable_baselines3.common.torch_layers import BaseFeaturesExtractor
 from stable_baselines3.common.callbacks import BaseCallback, EvalCallback
