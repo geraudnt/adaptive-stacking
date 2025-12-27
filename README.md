@@ -53,8 +53,9 @@ We introduce **Adaptive Stacking**, a general, algorithm-agnostic alternative to
 The code has been tested on **Ubuntu ≥ 20.04 LTS** with **Python 3.10**.
 
 ### Main Dependencies
-- `gymnasium==1.0.0`
-- `stable_baselines3==2.7.1`
+```bash
+pip install -r requirements.txt
+````
 
 To exactly reproduce our environment, use the provided Conda setup:
 
@@ -82,7 +83,7 @@ env = gym.make("tmaze-v0")
 env = AdaptiveStack(env, num_stack=4)
 
 model = PPO("MlpPolicy", env)
-model.learn(10000)
+model.learn(100000)
 ```
 
 That’s it! No algorithm changes required.
@@ -116,7 +117,7 @@ Interactively step through environments and **visualize the memory stack**.
 ### Examples
 
 ```bash
-python manual_control.py --env tmaze-v0 --maze_length 3 --stack_type adaptive --num_stack 4
+python manual_control.py --env tmaze-v0 --active --maze_length 3 --stack_type adaptive --num_stack 4
 ```
 
 <img src="images/tmaze-v0_adaptive.png" alt="Manual control" width = 100% height = auto>
@@ -231,8 +232,8 @@ Here, AdaptiveStack augments **both the action and observation spaces**.
 
 
 ```bash
-python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch mlp --stack_type framestack --num_stack 4
-python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch mlp --stack_type adaptive --num_stack 4
+python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch mlp --stack_type framestack --num_stack 4
+python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch mlp --stack_type adaptive --num_stack 4
 ```
 <table>
   <tr>
@@ -242,8 +243,8 @@ python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 
 </table>
 
 ```bash
-python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch lstm --stack_type framestack --num_stack 4
-python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch lstm --stack_type adaptive --num_stack 4
+python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch lstm --stack_type framestack --num_stack 4
+python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch lstm --stack_type adaptive --num_stack 4
 ```
 <table>
   <tr>
@@ -253,8 +254,8 @@ python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 
 </table>
 
 ```bash
-python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch Transformer --stack_type framestack --num_stack 4
-python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 1024 --arch Transformer --stack_type adaptive --num_stack 4
+python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch transformer --stack_type framestack --num_stack 4
+python train.py --env FetchReachDense-v4 --algo PPO --n_envs 8 --arch transformer --stack_type adaptive --num_stack 4
 ```
 <table>
   <tr>
@@ -268,8 +269,8 @@ python train.py --env FetchReachDense-v4 --algo PPO --n_steps 1024 --batch_size 
 #### (3) PPO with CNN (MiniGrid)
 
 ```bash
-python train.py --arch mlp --with_cnn --algo PPO --stack_type framestack --num_stack 2 --env MiniGrid-MemoryS17Random-v0 --n_envs 8 --features_dim 1024 --hidden_size 1024
-python train.py --arch mlp --with_cnn --algo PPO --stack_type adaptive --num_stack 2 --env MiniGrid-MemoryS17Random-v0 --n_envs 8 --features_dim 1024 --hidden_size 1024
+python train.py --arch mlp --with_cnn --algo PPO --stack_type framestack --num_stack 2 --env MiniGrid-MemoryS17Random-v0 --n_envs 8 --features_dim 1024 --hidden_size 1024 --seed 0
+python train.py --arch mlp --with_cnn --algo PPO --stack_type adaptive --num_stack 2 --env MiniGrid-MemoryS17Random-v0 --n_envs 8 --features_dim 1024 --hidden_size 1024 --seed 0
 ```
 <table>
   <tr>
