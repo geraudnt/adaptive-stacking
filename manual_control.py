@@ -14,9 +14,9 @@ args = parser.parse_args()
 # export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so
 # export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6
 
-KEYS = {27:'escape', 8:'backspace', 9:'tab', 13:'enter', 32:' ', 81:'left', 82:'up', 83:'right', 84:'down'}
-controls = {"Quit":'escape', 'reset':'backspace', 'random action':'tab', 'minigrid_pickup':'enter', 'minigrid_open':' ', 'left':'left', 'up':'up', 'right':'right', 'down':'down',}
-print(f"\n Environment controls: {controls} \n")
+KEYS = {27:'escape', 8:'backspace', 9:'tab', 13:'enter', 32:' ', 81:'left', 82:'up', 83:'right', 84:'down', 117:"U", 100:"D", 108:"L", 114:"R", 102:"F", 98:"B"}
+controls = {"Quit":'escape', 'reset':'backspace', 'random action':'tab'}
+print(f"\n General controls: {controls} \n")
 print(f"\n Memory controls: Press keys 0-{min(9,args.num_stack-1)} to pop the ith observation from the stack (and take a random environment action) \n")
 
 def transform_rgb_bgr(image):
@@ -62,8 +62,12 @@ def key_handler(key):
     try:
         if key == 'backspace': 
             return reset()
-        elif hasattr(env.unwrapped,"actions") and type(env.unwrapped.actions)==dict and key in env.unwrapped.actions: 
-            action = env.unwrapped.actions[key]
+        elif hasattr(env.unwrapped,"actions") and key in env.unwrapped.actions: 
+            if type(env.unwrapped.actions)==dict:
+                action = env.unwrapped.actions[key]
+            else: # list
+                action = env.unwrapped.actions.index(key)
+                print(action, key)
             if args.stack_type=="adaptive" and not args.single_head:
                 action = [action, args.num_stack-1]
                 print(f"Memory action i={args.num_stack-1}. Environment action: {action}")
@@ -79,14 +83,14 @@ def key_handler(key):
                     action[-1] = key-48
                     print(f"Memory action i={key-48}. Random environment action: {action}")
                 else:
-                    print("Unknown environment action. Random action taken:", action)
+                    print(f"Unknown pressed key={key}. Random action taken: {action}")
             else:
-                print("Unknown environment action. Random action taken:", action)
+                print(f"Unknown pressed key={key}. Random action taken: {action}")
 
         return step(action)
     except:
         action = env.action_space.sample()
-        print("Unknown action. Random action taken:", action)
+        print(f"Unknown pressed key={key}. Random action taken: {action}")
         return step(action)
 
 
@@ -95,6 +99,8 @@ if __name__ == "__main__":
     env.action_space.seed(args.seed)
     print("Observation space: ", env.observation_space)
     print("action_space: ", env.action_space)
+    if hasattr(env.unwrapped,"actions"):
+        print("actions: ", env.unwrapped.actions)
     # assert ((len(env.observation_space.shape) == 3) and args.agent_view) or (not args.agent_view), "agent_view is only for RGB image observations"  
     
     cv2.namedWindow(args.env, cv2.WINDOW_NORMAL); start()

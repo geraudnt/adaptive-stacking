@@ -46,7 +46,7 @@ class cube(gym.Env):
     }
     
     # Net layout: (row, col) → state index
-    grid = {
+    grid2d = {
         (0, 2): 0,  (0, 3): 1,
         (1, 2): 2,  (1, 3): 3,
 
@@ -175,28 +175,29 @@ class cube(gym.Env):
             plt.tight_layout(pad=0)
 
         square_size = 1
-        for (r, c), idx in self.grid.items():
+        for (r, c), idx in self.grid2d.items():
             alpha = 1
             if idx not in self.camera_views[self.camera_view]:
                 alpha = self.render_alpha
-            if ((r, c), idx) not in self.polygons:
+            if idx not in self.polygons:
                 rect = patches.Rectangle(
                     (c * square_size, -r * square_size),
                     square_size,
                     square_size,
                 )
                 self.ax.add_patch(rect)    
-                self.polygons[((r, c), idx)] = rect
-            self.polygons[((r, c), idx)].set_facecolor(self.COLOR_MAP[self.state[idx]])
-            self.polygons[((r, c), idx)].set_edgecolor("black")
-            self.polygons[((r, c), idx)].set_linewidth(self.visible_line_width if alpha==1 else self.invisible_line_width)
-            self.polygons[((r, c), idx)].set_alpha(alpha)  
+                self.polygons[idx] = rect
+            self.polygons[idx].set_facecolor(self.COLOR_MAP[self.state[idx]])
+            self.polygons[idx].set_edgecolor("black")
+            self.polygons[idx].set_linewidth(self.visible_line_width if alpha==1 else self.invisible_line_width)
+            self.polygons[idx].set_alpha(alpha)  
     
     def render_cube_3d(self):
         new_fig = False
         if not hasattr(self, "fig"):
             new_fig = True
             self.polygons = {}
+            self.setup_3d_frames()
             if self.render_mode == 'human':
                 plt.ion()
             self.fig = plt.figure("render", figsize=(4, 4))
@@ -210,12 +211,12 @@ class cube(gym.Env):
             plt.tight_layout(pad=0)  
 
         # Draw visible faces
-        for idxs, axis, val in self.FACES_MAP.values():
-            colors = [self.COLOR_MAP[self.state[i]] for i in idxs]
+        for face in self.FACES_MAP:
             alpha = 1
+            idxs, axis, val = self.FACES_MAP[face]
             if idxs[0] not in self.camera_views[self.camera_view]:
                 alpha = self.render_alpha
-            self.draw_face(idxs, axis, val, colors, alpha=alpha)  
+            self.draw_face(face, alpha=alpha)  
 
         # Camera setup        
         if self.render_mode == 'human' and new_fig:
@@ -243,42 +244,125 @@ class cube(gym.Env):
                 self.ax.set_zlim(-0.8, 0.8)
 
 
-    def draw_face(self, idxs, axis, value, colors, alpha=1):
-        coords = [-1, 0, 1]
-        k = 0
-        for i in range(2):
-            for j in range(2):
-                if (idxs,i,j) not in self.polygons:
-                    if axis == "x":
-                        verts = [
-                            (value, coords[j],   coords[i]),
-                            (value, coords[j+1], coords[i]),
-                            (value, coords[j+1], coords[i+1]),
-                            (value, coords[j],   coords[i+1]),
-                        ]
-                    elif axis == "y":
-                        verts = [
-                            (coords[j], value,   coords[i]),
-                            (coords[j+1], value, coords[i]),
-                            (coords[j+1], value, coords[i+1]),
-                            (coords[j], value,   coords[i+1]),
-                        ]
-                    else:  # z
-                        verts = [
-                            (coords[j],   coords[i],   value),
-                            (coords[j+1], coords[i],   value),
-                            (coords[j+1], coords[i+1], value),
-                            (coords[j],   coords[i+1], value),
-                        ]
+    def draw_face(self, face, alpha=1):
+        idxs, axis, val = self.FACES_MAP[face]
+        for k,idx in enumerate(idxs):
+            if idx not in self.polygons:
+                r, c = self.idx_to_rc[idx]
+                top_r, top_c = self.face_topleft[face]
+                i = r - top_r   # 0 or 1 (row within face)
+                j = c - top_c   # 0 or 1 (col within face)
+                # v points in the net +row direction (down). We want v_up (local +z/up) = -v
+                v_up = -self.frames[face]["v"]
 
-                    poly = Poly3DCollection([verts])
-                    self.polygons[(idxs,i,j)] = poly
-                    self.ax.add_collection3d(poly)
-                self.polygons[(idxs,i,j)].set_facecolor(colors[k])
-                self.polygons[(idxs,i,j)].set_edgecolor("black")
-                self.polygons[(idxs,i,j)].set_linewidth(self.visible_line_width if alpha==1 else self.invisible_line_width)
-                self.polygons[(idxs,i,j)].set_alpha(alpha)
-                k += 1  
+                # local coordinates on face:
+                # left / right on x (sx): left = -1 + j , right = left + 1
+                sx_left = -1 + j
+                sx_right = sx_left + 1
+                # top / bottom on z (sz): top = 1 - i , bottom = top - 1
+                sz_top = 1 - i
+                sz_bottom = sz_top - 1
+
+                # vertices (corners) order: top-left, top-right, bottom-right, bottom-left
+                vertices = [
+                    self.frames[face]["n"] + sx_left * self.frames[face]["u"] + sz_top * v_up,
+                    self.frames[face]["n"] + sx_right * self.frames[face]["u"] + sz_top * v_up,
+                    self.frames[face]["n"] + sx_right * self.frames[face]["u"] + sz_bottom * v_up,
+                    self.frames[face]["n"] + sx_left * self.frames[face]["u"] + sz_bottom * v_up,
+                ]
+                vertices = [tuple(np.asarray(p).astype(float)) for p in vertices]
+
+                poly = Poly3DCollection([vertices])
+                self.polygons[idx] = poly
+                self.ax.add_collection3d(poly)
+            self.polygons[idx].set_facecolor(self.COLOR_MAP[self.state[idx]])
+            self.polygons[idx].set_edgecolor("black")
+            self.polygons[idx].set_linewidth(self.visible_line_width if alpha==1 else self.invisible_line_width)
+            self.polygons[idx].set_alpha(alpha)
+    
+    def setup_3d_frames(self):  
+        """
+        Fold the 2D net into 3D by computing an orientation frame (normal n, right u, down v) for each face by BFS on the net, 
+        then map each sticker's 2×2 local coordinates to the cube face using those frames.
+        """      
+        
+        self.idx_to_rc = {idx: rc for rc, idx in self.grid2d.items()}
+
+        # faces top-left (net) coordinates (r,c)
+        self.face_topleft = {}
+        for fname, (f_idxs, _, _) in self.FACES_MAP.items():
+            rs = [self.idx_to_rc[i][0] for i in f_idxs]
+            cs = [self.idx_to_rc[i][1] for i in f_idxs]
+            self.face_topleft[fname] = (min(rs), min(cs))
+
+        # adjacency between faces (two-grid-step adjacency because each face occupies 2x2 cells)
+        faces = list(self.FACES_MAP.keys())
+        pos = {f: self.face_topleft[f] for f in faces}
+        adj = {f: [] for f in faces}
+        for f1 in faces:
+            r1, c1 = pos[f1]
+            for f2 in faces:
+                if f1 == f2:
+                    continue
+                r2, c2 = pos[f2]
+                if r1 == r2 and abs(c1 - c2) == 2:
+                    adj[f1].append((f2, (0, c2 - c1)))
+                if c1 == c2 and abs(r1 - r2) == 2:
+                    adj[f1].append((f2, (r2 - r1, 0)))
+
+        # utility: Rodrigues rotation (returns numpy array)
+        def _rot(vec, axis, angle_deg):
+            angle = np.deg2rad(angle_deg)
+            axis = np.array(axis, dtype=float)
+            axis = axis / np.linalg.norm(axis)
+            v = np.array(vec, dtype=float)
+            return v * np.cos(angle) + np.cross(axis, v) * np.sin(angle) + axis * (np.dot(axis, v)) * (1 - np.cos(angle))
+
+        # axis unit vectors
+        axes = {"x": np.array([1.0, 0.0, 0.0]), "y": np.array([0.0, 1.0, 0.0]), "z": np.array([0.0, 0.0, 1.0])}
+
+        # BFS to compute frame (n, u, v) for every face.
+        # We seed at the Front face 'F' with:
+        #   n = +y (outward), u = +x corresponds to net +col, v = +row (down) corresponds to -z for front
+        self.frames = {}
+        start_face = "F"
+        self.frames[start_face] = {
+            "n": axes["y"] * 1.0,
+            "u": np.array([1.0, 0.0, 0.0]),   # net +col -> +x
+            "v": np.array([0.0, 0.0, -1.0]),  # net +row (down) -> -z
+        }
+        from collections import deque
+        dq = deque([start_face])
+        seen = {start_face}
+        while dq:
+            f = dq.popleft()
+            n = self.frames[f]["n"]
+            u = self.frames[f]["u"]
+            v = self.frames[f]["v"]
+            for (nbr, (dr, dc)) in adj[f]:
+                if nbr in seen:
+                    continue
+                if dc == 2:   # neighbour is to the right on the net -> rotate +90 around v
+                    axis = v
+                    angle = 90
+                elif dc == -2:  # neighbour to the left -> rotate -90 around v
+                    axis = v
+                    angle = -90
+                elif dr == 2:  # neighbour is below -> rotate -90 around u
+                    axis = u
+                    angle = -90
+                elif dr == -2:  # neighbour is above -> rotate +90 around u
+                    axis = u
+                    angle = 90
+                else:
+                    continue
+                n2 = _rot(n, axis, angle)
+                u2 = _rot(u, axis, angle)
+                v2 = _rot(v, axis, angle)
+                # round small floating noise
+                self.frames[nbr] = {"n": np.round(n2, 6), "u": np.round(u2, 6), "v": np.round(v2, 6)}
+                seen.add(nbr)
+                dq.append(nbr)
                 
         
 register(
