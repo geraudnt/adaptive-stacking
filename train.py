@@ -1,6 +1,3 @@
-from algos.grpo import GRPO
-from algos.ppo_recurrent import RecurrentPPO
-from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import SubprocVecEnv
 from stable_baselines3.common.utils import set_random_seed
 
@@ -40,12 +37,16 @@ if __name__ == "__main__":
     # Instantiate and train model
     policy_type, policy_kwargs = get_policy_type(args)
     if args.algo == "PPO":
+        from stable_baselines3 import PPO
+        
         model = PPO(policy_type, vec_env, policy_kwargs=policy_kwargs, device=args.device,
                     n_steps=args.n_steps, batch_size=args.batch_size, seed=args.seed, # n_epochs=20,
                     verbose=1, tensorboard_log=log_dir)
         model.learn(int(args.maxiter), callback=SaveLogCallback(log_dir=log_dir))
     
     elif args.algo == "RecurrentPPO":
+        from algos.ppo_recurrent import RecurrentPPO
+
         model = RecurrentPPO(policy_type, vec_env, 
                              n_stack = args.num_stack, # Recurrence/Sequence/Context length for the RNN (i.e. sliding window if using Frame Stacking)
                              adaptive_stack=args.stack_type=="adaptive", # Whether to use Adaptive Stacking or the default Frame Stacking (sliding window)
@@ -55,6 +56,8 @@ if __name__ == "__main__":
         model.learn(int(args.maxiter), callback=SaveLogCallback(log_dir=log_dir))
     
     elif args.algo == "GRPO":
+        from algos.grpo import GRPO
+
         model = GRPO(policy_type, vec_env, policy_kwargs=policy_kwargs, device=args.device,
                     n_steps=args.n_steps, batch_size=args.batch_size, seed=args.seed,
                     verbose=1, tensorboard_log=log_dir)
