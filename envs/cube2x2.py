@@ -74,6 +74,7 @@ class cube(gym.Env):
         self.steps = 0
         self.camera_view = 0
         self.goal_state = py222.initState()
+        self.goal_state = set([tuple(self.goal_state[i:i+4]) for i in range(0, len(self.goal_state), 4)])
         
         # Hard-coded to be cleaned
         self.camera_views = [[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]]
@@ -105,9 +106,13 @@ class cube(gym.Env):
         else:
             action_str = self.actions[action_ind]
             self.state = py222.doAlgStr(self.state, action_str)
-        diff = abs(self.goal_state-self.state).sum()
+        
+        # diff = abs(self.goal_state-self.state).sum()
+        # success = diff == 0
+        state = set([tuple(self.state[i:i+4]) for i in range(0, len(self.state), 4)])
+        success = state==self.goal_state
 
-        if diff == 0:
+        if success:
             reward = 1.0
             done = True
         else:
@@ -119,6 +124,7 @@ class cube(gym.Env):
             truncate = True
             
         obs = self.state[self.camera_views[self.camera_view]]
+        print(obs, self.state)
         
         if self.render_mode=="human":
             self.render() 
