@@ -13,6 +13,7 @@ if __name__ == "__main__":
     # Instantiate envs
     env, name = make_env(args)
     log_dir = args.path + name
+    os.makedirs(args.path, exist_ok=True)
 
     print("Observation space: ", env.observation_space)
     print("Action space: ", env.action_space)
@@ -38,7 +39,7 @@ if __name__ == "__main__":
     policy_type, policy_kwargs = get_policy_type(args)
     if args.algo == "PPO":
         from stable_baselines3 import PPO
-        
+
         model = PPO(policy_type, vec_env, policy_kwargs=policy_kwargs, device=args.device,
                     n_steps=args.n_steps, batch_size=args.batch_size, seed=args.seed, # n_epochs=20,
                     verbose=1, tensorboard_log=log_dir)
