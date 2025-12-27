@@ -3,6 +3,7 @@ gymnasium-robotics==1.4.1
 minigrid==3.0.0
 stable_baselines3==2.7.1
 sb3_contrib==2.7.1
+tensorboard==2.20.0
 numpy==1.24.3
 torch==2.4.1
 matplotlib==3.7.5
