@@ -1,5 +1,5 @@
 gymnasium==1.0.0
-stable_baselines3==2.4.1
+stable_baselines3==2.7.1
 numpy==1.24.3
 torch==2.4.1
 matplotlib==3.7.5
