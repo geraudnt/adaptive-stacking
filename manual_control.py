@@ -71,14 +71,14 @@ def key_handler(key):
                 action = env.unwrapped.actions.index(key)
             if args.stack_type=="adaptive" and not args.single_head:
                 action = [action, args.num_stack-1]
-                print(f"Memory action i={args.num_stack-1}. Environment action: {action}")
+                print(f"Memory action i={args.num_stack-1}. Environment action: {action[0]}")
             else:
                 print(f"Environment action: {action}")
         elif "MiniGrid" in args.env and key in minigrid_actions: 
             action = minigrid_actions[key]
             if args.stack_type=="adaptive" and not args.single_head:
                 action = [action, args.num_stack-1]
-                print(f"Memory action i={args.num_stack-1}. Environment action: {action}")
+                print(f"Memory action i={args.num_stack-1}. Environment action: {action[0]}")
             else:
                 print(f"Environment action: {action}")
         else: 
@@ -86,7 +86,7 @@ def key_handler(key):
             if args.stack_type=="adaptive" and key in range(48,58):
                 if key-48 < args.num_stack:
                     action[-1] = key-48
-                    print(f"Memory action i={key-48}. Random environment action: {action}")
+                    print(f"Memory action i={key-48}. Random environment action: {action[:-1]}")
                 else:
                     print(f"Unknown pressed key={key}. Random action taken: {action}")
             else:
