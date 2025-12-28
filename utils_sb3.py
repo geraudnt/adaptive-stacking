@@ -22,8 +22,8 @@ def load_agent(algorithm, model_path, env, device="cpu", deterministic=True):
         model = PPO.load(model_path, env=env, device=device)
         def agent(state):
             action = model.predict(state, deterministic=deterministic)[0]
-            if hasattr(env.unwrapped, "memory_dim") and deterministic==False:
-                action[env.unwrapped.memory_dim:] = model.predict(state, deterministic=True)[0][env.unwrapped.memory_dim:]
+            # if hasattr(env.unwrapped, "memory_dim") and deterministic==False:
+            #     action[env.unwrapped.memory_dim:] = model.predict(state, deterministic=True)[0][env.unwrapped.memory_dim:]
             return action
         return agent
     
@@ -33,8 +33,8 @@ def load_agent(algorithm, model_path, env, device="cpu", deterministic=True):
         model = RecurrentPPO.load(model_path, env=env, device=device)
         def agent(state, lstm_states=None, lstm_episode_starts=None):
             action, lstm_states = model.predict(state, state=lstm_states, episode_start=lstm_episode_starts, deterministic=deterministic)
-            if hasattr(env.unwrapped, "memory_dim") and deterministic==False:
-                action[env.unwrapped.memory_dim:] = model.predict(state, deterministic=True)[0][env.unwrapped.memory_dim:]
+            # if hasattr(env.unwrapped, "memory_dim") and deterministic==False:
+            #     action[env.unwrapped.memory_dim:] = model.predict(state, deterministic=True)[0][env.unwrapped.memory_dim:]
             return action, lstm_states
         return agent
     
@@ -44,8 +44,8 @@ def load_agent(algorithm, model_path, env, device="cpu", deterministic=True):
         model = GRPO.load(model_path, env=env, device=device)
         def agent(state):
             action = model.predict(state, deterministic=deterministic)[0]
-            if hasattr(env.unwrapped, "memory_dim") and deterministic==False:
-                action[env.unwrapped.memory_dim:] = model.predict(state, deterministic=True)[0][env.unwrapped.memory_dim:]
+            # if hasattr(env.unwrapped, "memory_dim") and deterministic==False:
+            #     action[env.unwrapped.memory_dim:] = model.predict(state, deterministic=True)[0][env.unwrapped.memory_dim:]
             return action
         return agent
 
