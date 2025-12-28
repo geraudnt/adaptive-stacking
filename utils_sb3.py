@@ -10,7 +10,7 @@ from stable_baselines3.common.callbacks import BaseCallback, EvalCallback
 from stable_baselines3.common.vec_env import SubprocVecEnv
 
 
-def load_agent(algorithm, model_path, env, device="cpu", deterministic=True, deterministic_i=True):
+def load_agent(algorithm, model_path, env, device="cpu", deterministic=True, deterministic_i=None):
     if algorithm == "QL":
         Q = defaultdict(lambda: np.zeros(env.action_space.n))
         Q.update(np.load(model_path, allow_pickle=True).item())
