@@ -87,5 +87,5 @@ if __name__ == "__main__":
             obs, _ = env.reset(seed=None if args.seed==None else args.seed+episode)
     if args.save_video:
         print(name)
-        imageio.mimsave(f"images/{name}.mp4", images, fps=60)
-        # imageio.mimsave(f"images/{name}.gif", images, loop=0, fps=60)
+        # imageio.mimsave(f"images/{name}.mp4", images, fps=60)
+        imageio.mimsave(f"images/{name}.gif", images, loop=0, fps=60)

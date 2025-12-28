@@ -14,40 +14,28 @@ def load_agent(algorithm, model_path, env, device="cpu", deterministic=True):
     if algorithm == "QL":
         Q = defaultdict(lambda: np.zeros(env.action_space.n))
         Q.update(np.load(model_path, allow_pickle=True).item())
-        return lambda state: Q[tuple(state.flatten())].argmax()
+        return lambda s: Q[tuple(s.flatten())].argmax()
     
     elif algorithm == "PPO":
         from stable_baselines3 import PPO
         
         model = PPO.load(model_path, env=env, device=device)
-        def agent(state):
-            action = model.predict(state, deterministic=deterministic)[0]
-            if hasattr(env.unwrapped, "memory_dim") and deterministic==False:
-                action[env.unwrapped.memory_dim:] = model.predict(state, deterministic=True)[0][env.unwrapped.memory_dim:]
-            return action
-        return agent
+        return lambda s: model.predict(s, deterministic=deterministic)[0]
     
     elif algorithm == "RecurrentPPO":
         from algos.ppo_recurrent import RecurrentPPO
         
         model = RecurrentPPO.load(model_path, env=env, device=device)
-        def agent(state, lstm_states=None, lstm_episode_starts=None):
-            action, lstm_states = model.predict(state, state=lstm_states, episode_start=lstm_episode_starts, deterministic=deterministic)
-            if hasattr(env.unwrapped, "memory_dim") and deterministic==False:
-                action[env.unwrapped.memory_dim:] = model.predict(state, deterministic=True)[0][env.unwrapped.memory_dim:]
-            return action, lstm_states
+        def agent(s, lstm_states=None, lstm_episode_starts=None):
+            a, state = model.predict(s, state=lstm_states, episode_start=lstm_episode_starts, deterministic=deterministic)
+            return a, state
         return agent
     
     elif algorithm == "GRPO":
         from algos.grpo import GRPO
         
         model = GRPO.load(model_path, env=env, device=device)
-        def agent(state):
-            action = model.predict(state, deterministic=deterministic)[0]
-            if hasattr(env.unwrapped, "memory_dim") and deterministic==False:
-                action[env.unwrapped.memory_dim:] = model.predict(state, deterministic=True)[0][env.unwrapped.memory_dim:]
-            return action
-        return agent
+        return lambda s: model.predict(s, deterministic=deterministic)[0]
 
     raise ValueError(f"Unknown algorithm {algorithm!r}")
 
@@ -147,12 +135,17 @@ class LoggerWrapper(gym.Wrapper):
         # self.successes += reward>0
         self.stats["rewards"].append(reward)
         if hasattr(self.env.unwrapped,"MAP"): ### TMaze
-            if hasattr(self.unwrapped,"num_stack") and len(self.state.shape)==2:
+            env = None
+            if hasattr(self.env,"num_stack"): env = self.env
+            elif hasattr(self.env.env,"num_stack"): env = self.env.env
+            elif hasattr(self.env.env.env,"num_stack"): env = self.env.env.env
+            elif hasattr(self.env.env.env.env,"num_stack"): env = self.env.env.env.env
+            if env and len(self.state.shape)==2:
                 s_obs = tuple(self.state[-1])
                 ns_obs = tuple(state[-1:])
-                s_mem = [tuple(self.state[i]) for i in range(0,self.unwrapped.num_stack-1)]
-                ns_mem = [tuple(state[i]) for i in range(0,self.unwrapped.num_stack-1)]
-                goal = tuple(self.unwrapped.get_pos_obs(self.unwrapped.goal))
+                s_mem = [tuple(self.state[i]) for i in range(0,env.num_stack-1)]
+                ns_mem = [tuple(state[i]) for i in range(0,env.num_stack-1)]
+                goal = tuple(self.env.unwrapped.get_pos_obs(self.env.unwrapped.goal))
                 # print(goal, len(state))
                 self.memory_regret += (not done) and (goal not in ns_mem)
                 if not done and (goal in s_mem): self.passive_count += (goal not in ns_mem)

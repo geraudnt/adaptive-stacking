@@ -29,6 +29,7 @@ class FrameStack(gym.ObservationWrapper, gym.utils.RecordConstructorArgs):
         gym.ObservationWrapper.__init__(self, env)
 
         self.num_stack = num_stack
+        self.unwrapped.num_stack = num_stack
         self.observe_stack = observe_stack
         self.frames = deque(maxlen=num_stack)
         self.frames_render = deque(maxlen=num_stack)
@@ -113,6 +114,7 @@ class AdaptiveStack(gym.ObservationWrapper, gym.utils.RecordConstructorArgs):
 
         assert num_stack > 0, "num_stack should be greater than 0"
         self.num_stack = num_stack
+        self.unwrapped.num_stack = num_stack
         self.multi_head = multi_head
         self.observe_stack = observe_stack
         self.frames = deque(maxlen=num_stack)
@@ -129,29 +131,34 @@ class AdaptiveStack(gym.ObservationWrapper, gym.utils.RecordConstructorArgs):
                 low=low, high=high, dtype=self.observation_space.dtype
             )
 
+        self.unwrapped.memory_dim = None
         self.env_action_space = env.action_space
         if self.multi_head and isinstance(self.env_action_space, Discrete):
             # Separate heads for env action and memory action index
+            self.unwrapped.memory_dim = 1
             self.action_space = MultiDiscrete([self.env_action_space.n, num_stack])
         elif isinstance(self.env_action_space, MultiDiscrete):
             # Separate heads for env action and memory action index
+            self.unwrapped.memory_dim = len(self.env_action_space.nvec)
             self.action_space = MultiDiscrete(np.append(self.env_action_space.nvec, num_stack))
         elif isinstance(self.env_action_space, Discrete):
             # Single discrete space: env.n * num_stack
             self.action_space = Discrete(self.env_action_space.n * num_stack)
         elif self.multi_head:
             # Continuous case: represent memory action as a binary number (by thresholding reals)
+            self.unwrapped.memory_dim = len(self.env_action_space.low)
             low = np.concatenate([
                 self.env_action_space.low,
-                np.zeros(int(np.ceil(np.log(self.num_stack))), dtype=np.uint8)+self.env_action_space.low[0],
+                np.zeros(int(np.ceil(np.log(num_stack))), dtype=np.uint8)+self.env_action_space.low[0],
             ])
             high = np.concatenate([
                 self.env_action_space.high,
-                np.zeros(int(np.ceil(np.log(self.num_stack))), dtype=np.uint8)+self.env_action_space.high[0],
+                np.zeros(int(np.ceil(np.log(num_stack))), dtype=np.uint8)+self.env_action_space.high[0],
             ])
             self.action_space = Box(low=low, high=high, dtype=self.env_action_space.dtype)
         else:
             # Continuous case: represent memory action as a single real number (which is then quantized)
+            self.unwrapped.memory_dim = len(self.env_action_space.low)
             low = np.concatenate([
                 self.env_action_space.low,
                 np.zeros(1, dtype=np.uint8)+self.env_action_space.low[0],
@@ -253,6 +260,7 @@ class DemirFrameStack(gym.ObservationWrapper, gym.utils.RecordConstructorArgs):
 
         assert num_stack > 0, "num_stack should be greater than 0"
         self.num_stack = num_stack
+        self.unwrapped.num_stack = num_stack
         self.multi_head = multi_head
         self.frames = deque(maxlen=num_stack)
         self.frames_render = deque(maxlen=num_stack)
